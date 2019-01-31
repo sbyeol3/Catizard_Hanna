@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class N_MainPage_Chap2 : MonoBehaviour, IPointerDownHandler
 {
@@ -32,7 +33,8 @@ public class N_MainPage_Chap2 : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            // 챕터2 게임진행
+            // 게임 진행 씬으로 이동
+            SceneManager.LoadScene("CardSystem");
         }
     }
 

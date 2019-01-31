@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HelpScene.unity
     guid: 85ffdf978e7ab7c409596d27f21265c6
+  - enabled: 1
+    path: Assets/Scenes/CardSystem.unity
+    guid: 86a8d7bfb530f944eb59948af0060633
   m_configObjects: {}
