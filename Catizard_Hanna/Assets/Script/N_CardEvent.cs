@@ -11,13 +11,9 @@ public class N_CardEvent : MonoBehaviour
     public Text energyText;
     private int energy;
 
-    void Start()
-    {
-        CDS.removeMark(number);
-    }
-
     private void OnEnable()
     {
+        CDS.removeMark(number);
         setEnergy();
     }
 

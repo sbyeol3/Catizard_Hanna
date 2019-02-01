@@ -216,7 +216,7 @@ public class N_CardDeckSys : MonoBehaviour
         }
         else if (number == 2 && left * right < 4)
         {
-            if (left >= right)
+            if (left > right)
             {
                 for (int i = 3; i <= 4; i++)
                 {
