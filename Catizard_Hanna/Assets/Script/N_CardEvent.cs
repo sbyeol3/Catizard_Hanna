@@ -9,18 +9,19 @@ public class N_CardEvent : MonoBehaviour
     public int number;
     public N_CardDeckSys CDS;
     public Text energyText;
-    private int energy;
+    private int cardType, energy;
+    public static bool isPress = false;
 
     private void OnEnable()
     {
-        CDS.removeMark(number);
-        setEnergy();
+        CDS.RemoveMark(number);
+        SetEnergy();
     }
 
-    public void setEnergy()
+    public void SetEnergy()
     {
-        int CardType = CDS.getCardType(number);
-        switch (CardType)
+        cardType = CDS.GetCardType(number);
+        switch (cardType)
         {
             case 0:
             case 1:
@@ -47,29 +48,56 @@ public class N_CardEvent : MonoBehaviour
     }
 
     // 마우스가 눌렀다 땠을 때
-    public void OnMouseUp()
+    public void ClickUp()
     {
         // 마우스 왼쪽인 경우
         if (Input.GetMouseButtonUp(0))
         {
-            if (CDS.setEnergy(energy))
+            if (CDS.SetEnergy(energy))
             {
-                CDS.clickLeftCard(number);
-                setEnergy();
+                CDS.RemoveInfo();
+                CDS.ClickLeftCard(number);
+                SetEnergy();
+                if (isActiveAndEnabled && isPress)
+                {
+                    CDS.PrintInfo(cardType);
+                }
             }
+        }
+        // 마우스 오른쪽인 경우
+        else if (Input.GetMouseButtonUp(1))
+        {
+            isPress = false;
+            CDS.RemoveInfo();
+        }
+    }
+
+    // 마우스를 누를 때
+    public void ClickDown()
+    {
+        // 마우스 오른쪽인 경우
+        if (Input.GetMouseButtonDown(1))
+        {
+            isPress = true;
+            CDS.PrintInfo(cardType);
         }
     }
 
     // 마우스가 들어온 순간
-    public void OnMouseEnter()
+    public void PointEnter()
     {
-        CDS.setMark(number);
+        if (isPress)
+        {
+            CDS.PrintInfo(cardType);
+        }
+        CDS.SetMark(number);
     }
 
     // 마우스가 나가는 순간
-    public void OnMouseExit()
+    public void PointExit()
     {
-        CDS.removeMark(number);
+        CDS.RemoveInfo();
+        CDS.RemoveMark(number);
     }
 
 }
