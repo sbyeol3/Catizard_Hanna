@@ -7,13 +7,14 @@ public class N_CardDeckSys : MonoBehaviour
 {
 
     public bool isTest;                  // 테스트 모드 : 카드 덱 상태를 Inspector창에서 설정
-    public float SuffleTime = 20, BlinkTime = 5, DrawTime = 0.5f;
+    public float SuffleTime = 20, BlinkTime = 5, DrawTime = 0.2f;
     public int MaxEnergy = 100;  // 에너지 최대치
     public int TotalCard;               // 총 카드 수
     public int[] CardOrder;           // 카드 순서 관리
     private int[] HandOrder = { 0, 3, 4, 5, 8 };         // 수중의 카드 순서 관리
     public Text CardNText, EnergyText;
     public Animator EnergyAnimator;
+    public Animator[] CardAnimator;
     private int CardN, CardIndex, Energy;     // 남은 카드 수, 에너지양
     public GameObject[] WhiteMark;
     public Image[] CardImage;
@@ -77,7 +78,7 @@ public class N_CardDeckSys : MonoBehaviour
             N_CardEvent.isPress = false;
             for (int i = 0; i < 5; i++)
             {
-                RemoveCard(i);
+                StartCoroutine(RemoveCard(i, true));
             }
             yield return new WaitForSecondsRealtime(0.75f);
             EnergyAnimator.SetTrigger("Blink");
@@ -98,6 +99,7 @@ public class N_CardDeckSys : MonoBehaviour
                     HandOrder[i] = index;
                     CardObject[i].SetActive(true);
                     CardImage[i].sprite = CardSprite[index];
+                    CardAnimator[i].SetTrigger("Draw");
                     // + 카드 드로우 애니메이션
                     yield return new WaitForSecondsRealtime(DrawTime);
                 }
@@ -147,12 +149,17 @@ public class N_CardDeckSys : MonoBehaviour
     }
 
     // 사용된 카드는 버려짐
-    void RemoveCard(int index)
+    IEnumerator RemoveCard(int index, bool isAni)
     {
         HandOrder[index] = -1;
-        // + 카드 버리는 애니메이션
-        CardObject[index].SetActive(false);
         RemoveMark(index);
+        // + 카드 버리는 애니메이션
+        if (isAni)
+        {
+            CardAnimator[index].SetTrigger("Remove");
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
+        CardObject[index].SetActive(false);
     }
 
     // 마우스가 닿은 카드에는 Marking
@@ -190,21 +197,22 @@ public class N_CardDeckSys : MonoBehaviour
     {
         int CardType = HandOrder[number];
         print(CardType + "번 카드 사용");
-        // + HandOrder[number]에 해당하는 카드 함수 실행
 
-        // 사용된 카드는 버려짐
-        RemoveCard(number);
+        // + HandOrder[number]에 해당하는 카드 함수 실행
 
         if (number < 2)
             left++;
         else if (number > 2)
             right++;
 
+        // 사용된 카드는 버려짐
+        StartCoroutine(RemoveCard(number, false));
+
         // 카드 가운데로 모으기
         if (number == 1 && HandOrder[0] != -1)
         {
             CardType = HandOrder[0];
-            RemoveCard(0);
+            StartCoroutine(RemoveCard(0, false));
             HandOrder[1] = CardType;
             CardObject[1].SetActive(true);
             CardImage[1].sprite = CardSprite[CardType];
@@ -213,7 +221,7 @@ public class N_CardDeckSys : MonoBehaviour
         else if (number == 3 && HandOrder[4] != -1)
         {
             CardType = HandOrder[4];
-            RemoveCard(4);
+            StartCoroutine(RemoveCard(4, false));
             HandOrder[3] = CardType;
             CardObject[3].SetActive(true);
             CardImage[3].sprite = CardSprite[CardType];
@@ -226,7 +234,7 @@ public class N_CardDeckSys : MonoBehaviour
                 for (int i = 3; i <= 4; i++)
                 {
                     CardType = HandOrder[i];
-                    RemoveCard(i);
+                    StartCoroutine(RemoveCard(i, false));
                     HandOrder[i - 1] = CardType;
                     CardObject[i - 1].SetActive(true);
                     CardImage[i - 1].sprite = CardSprite[CardType];
@@ -240,7 +248,7 @@ public class N_CardDeckSys : MonoBehaviour
                 for (int i = 1; i >= 0; i--)
                 {
                     CardType = HandOrder[i];
-                    RemoveCard(i);
+                    StartCoroutine(RemoveCard(i, false));
                     HandOrder[i + 1] = CardType;
                     CardObject[i + 1].SetActive(true);
                     CardImage[i + 1].sprite = CardSprite[CardType];

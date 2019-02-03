@@ -644,6 +644,7 @@ GameObject:
   - component: {fileID: 576721402}
   - component: {fileID: 576721404}
   - component: {fileID: 576721405}
+  - component: {fileID: 576721406}
   m_Layer: 5
   m_Name: Card_M
   m_TagString: Untagged
@@ -805,6 +806,25 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!95 &576721406
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576721400}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 06dd8db5b3b79634fbc5308606e0de27, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &593247143
 GameObject:
   m_ObjectHideFlags: 0
@@ -1205,7 +1225,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1517,8 +1537,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.00000095367}
-  m_SizeDelta: {x: 844, y: 475}
+  m_AnchoredPosition: {x: 0.00000095367, y: 0.00085831}
+  m_SizeDelta: {x: 800, y: 450.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &990950178
 MonoBehaviour:
@@ -2082,6 +2102,7 @@ GameObject:
   - component: {fileID: 1382173678}
   - component: {fileID: 1382173680}
   - component: {fileID: 1382173682}
+  - component: {fileID: 1382173681}
   m_Layer: 5
   m_Name: Card_L
   m_TagString: Untagged
@@ -2097,7 +2118,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1382173676}
   m_LocalRotation: {x: -0, y: -0, z: 0.052335896, w: 0.9986295}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1937897928}
@@ -2161,6 +2182,25 @@ MonoBehaviour:
   number: 0
   CDS: {fileID: 2046294072}
   energyText: {fileID: 843068858}
+--- !u!95 &1382173681
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382173676}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a8c351cf79b16da47a0d270acd0cb84a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1382173682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2410,6 +2450,7 @@ GameObject:
   - component: {fileID: 1476997009}
   - component: {fileID: 1476997011}
   - component: {fileID: 1476997012}
+  - component: {fileID: 1476997013}
   m_Layer: 5
   m_Name: Card_R
   m_TagString: Untagged
@@ -2571,6 +2612,25 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!95 &1476997013
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476997007}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: da97a9c1c3a7780469f563d8937d1f3a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1506938209
 GameObject:
   m_ObjectHideFlags: 0
@@ -2658,6 +2718,7 @@ GameObject:
   - component: {fileID: 1535901090}
   - component: {fileID: 1535901092}
   - component: {fileID: 1535901093}
+  - component: {fileID: 1535901094}
   m_Layer: 5
   m_Name: 'Card_RM '
   m_TagString: Untagged
@@ -2819,6 +2880,25 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!95 &1535901094
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535901088}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b5f637f2fe284149a059f35d6ecf5a6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1544457893
 GameObject:
   m_ObjectHideFlags: 0
@@ -3148,6 +3228,7 @@ GameObject:
   - component: {fileID: 1645472873}
   - component: {fileID: 1645472875}
   - component: {fileID: 1645472876}
+  - component: {fileID: 1645472877}
   m_Layer: 5
   m_Name: Card_LM
   m_TagString: Untagged
@@ -3309,6 +3390,25 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!95 &1645472877
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1645472871}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bc13aace87d8a8a45847e7004d048700, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1660691811
 GameObject:
   m_ObjectHideFlags: 0
@@ -3938,13 +4038,19 @@ MonoBehaviour:
   isTest: 1
   SuffleTime: 10
   BlinkTime: 3
-  DrawTime: 0.25
+  DrawTime: 0.2
   MaxEnergy: 100
   TotalCard: 11
   CardOrder: 0000000001000000020000000300000004000000050000000500000006000000060000000700000008000000
   CardNText: {fileID: 1121443436}
   EnergyText: {fileID: 593247145}
   EnergyAnimator: {fileID: 593247147}
+  CardAnimator:
+  - {fileID: 1382173681}
+  - {fileID: 1645472877}
+  - {fileID: 576721406}
+  - {fileID: 1535901094}
+  - {fileID: 1476997013}
   WhiteMark:
   - {fileID: 915676980}
   - {fileID: 1506938209}
