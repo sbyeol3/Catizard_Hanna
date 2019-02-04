@@ -21,10 +21,14 @@ public class N_CardDeckSys : MonoBehaviour
     public Image[] CardImage;
     public GameObject[] CardObject;
     public Image InfoImage;
-    public GameObject InfoObject;
+    public GameObject InfoObject, InfoWhiteObject;
     public Sprite[] CardSprite, InfoSprite;     // 카드 그래픽 (뒷면)
+    public GameObject[] Removed_Card;
+    public Image[] Removed_Image;
+    public Animator[] Removed_Animator;
+    public GameObject[] DeckObject;
 
-    private int left, right;
+    private int left, right, total;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +58,7 @@ public class N_CardDeckSys : MonoBehaviour
             }
         }
 
+        InfoWhiteObject.SetActive(false);
         InfoObject.SetActive(false);
         CardN = TotalCard;
         CardNText.text = "" + CardN;
@@ -74,14 +79,22 @@ public class N_CardDeckSys : MonoBehaviour
         // 카드덱 시스템
         while (true)
         {
+            TimeToSleep = SuffleTime - BlinkTime - (DrawTime * 5) - 1;
             // 카드를 버린다.
             RemoveInfo();
             N_CardEvent.isPress = false;
+            total = 0;
             for (int i = 0; i < 5; i++)
             {
+                Removed_Animator[i].SetTrigger("end");
                 StartCoroutine(RemoveCard(i, true));
             }
-            yield return new WaitForSecondsRealtime(0.75f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            for (int i = 0; i < 5; i++)
+            {
+                Removed_Card[i].SetActive(false);
+            }
+            yield return new WaitForSecondsRealtime(0.25f);
             EnergyAnimator.SetTrigger("Blink");
             yield return new WaitForSecondsRealtime(0.25f);
 
@@ -102,19 +115,37 @@ public class N_CardDeckSys : MonoBehaviour
                     CardImage[i].sprite = CardSprite[index];
                     CardAnimator[i].SetTrigger("Draw");
                     // + 카드 드로우 애니메이션
+                    if (CardN == 2)
+                        DeckObject[2].SetActive(false);
+                    else if (CardN == 1)
+                        DeckObject[1].SetActive(false);
+                    else if (CardN == 0)
+                        DeckObject[0].SetActive(false);
                     yield return new WaitForSecondsRealtime(DrawTime);
                 }
                 // 뽑을 카드가 없으면 덱을 루프시킨다.
                 else
                 {
-                    // + 카드 루프 애니메이션
                     CardShuffle();
-                    CardN = TotalCard;
-                    CardNText.text = "" + CardN;
-                    CardIndex = 0;
+                    // + 카드 루프 애니메이션
+                    yield return new WaitForSecondsRealtime(0.3f);
+                    for (int k = 0; k < TotalCard; k++)
+                    {
+                        if (k < 3)
+                        {
+                            DeckObject[k].SetActive(true);
+                        }
+                        CardN = k + 1;
+                        CardNText.text = "" + CardN;
+                        CardIndex = 0;
+                        if (k < 3)
+                            yield return new WaitForSecondsRealtime(0.1f);
+                        else
+                            yield return new WaitForSecondsRealtime(0.01f);
+                    }
+                    yield return new WaitForSecondsRealtime(0.3f);
                     i--;
-                    yield return new WaitForSecondsRealtime(DrawTime);
-                    TimeToSleep -= DrawTime;
+                    TimeToSleep -= 0.6f + 0.01f * (TotalCard - 3);
                 }
             }
 
@@ -208,6 +239,10 @@ public class N_CardDeckSys : MonoBehaviour
             right++;
 
         // 사용된 카드는 버려짐
+        Removed_Card[total].SetActive(true);
+        Removed_Image[total].sprite = CardSprite[CardType];
+        Removed_Animator[total].SetTrigger("remove");
+        total++;
         StartCoroutine(RemoveCard(number, false));
 
         // 카드 가운데로 모으기
@@ -267,6 +302,7 @@ public class N_CardDeckSys : MonoBehaviour
     // 마우스 오른쪽 누르면
     public void PrintInfo(int cardType)
     {
+        InfoWhiteObject.SetActive(true);
         InfoObject.SetActive(true);
         InfoImage.sprite = InfoSprite[cardType];
     }
@@ -274,6 +310,7 @@ public class N_CardDeckSys : MonoBehaviour
     // 마우스 오른쪽 떼면 or 마우스가 카드 밖으로 나가면
     public void RemoveInfo()
     {
+        InfoWhiteObject.SetActive(false);
         InfoObject.SetActive(false);
     }
 
