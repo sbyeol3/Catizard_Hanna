@@ -12,6 +12,7 @@ public class N_CardDeckSys : MonoBehaviour
     public int TotalCard;               // 총 카드 수
     public int[] CardOrder;           // 카드 순서 관리
     private int[] HandOrder = { 0, 3, 4, 5, 8 };         // 수중의 카드 순서 관리
+    public N_CardSystem CS;
     public Text CardNText, EnergyText;
     public Animator EnergyAnimator;
     public Animator[] CardAnimator;
@@ -199,6 +200,7 @@ public class N_CardDeckSys : MonoBehaviour
         print(CardType + "번 카드 사용");
 
         // + HandOrder[number]에 해당하는 카드 함수 실행
+        CS.CardFunction(CardType);
 
         if (number < 2)
             left++;

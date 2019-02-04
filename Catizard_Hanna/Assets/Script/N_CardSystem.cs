@@ -7,7 +7,7 @@ public class N_CardSystem : MonoBehaviour
 {
 
     public bool isGame = true;
-    public int GameMinute = 5;
+    public int GameMinute = 5, HeroSpeed = 1;
     public Slider HeroSlider;
     public Animator HeroAnimator;
 
@@ -27,9 +27,31 @@ public class N_CardSystem : MonoBehaviour
             {
                 isGame = false;
             }
-            HeroSlider.value -= 1;
+            HeroSlider.value -= HeroSpeed;
             yield return new WaitForSecondsRealtime(0.5f);
         }
+    }
+
+    // 카드 기능 함수
+    public void CardFunction(int num)
+    {
+        switch (num)
+        {
+            case 7:
+                On_SOS();
+                break;
+        }
+    }
+
+    public void On_SOS()
+    {
+        HeroSpeed = 2;
+        Invoke("Off_SOS", 10f);
+    }
+
+    public void Off_SOS()
+    {
+        HeroSpeed = 1;
     }
 
 }
