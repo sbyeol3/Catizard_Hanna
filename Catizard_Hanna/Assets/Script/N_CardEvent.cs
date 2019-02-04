@@ -24,25 +24,40 @@ public class N_CardEvent : MonoBehaviour
         switch (cardType)
         {
             case 0:
+                energyText.text = "" + 20;
+                energy = 20;
+                break;
             case 1:
+                energyText.text = "" + 25;
+                energy = 25;
+                break;
             case 2:
+                energyText.text = "" + 25;
+                energy = 25;
+                break;
             case 3:
-            case 8:
                 energyText.text = "" + 0;
                 energy = 0;
                 break;
+            case 8:
+                energyText.text = "" + 10;
+                energy = 10;
+                break;
             case 4:
-            case 5:
                 energyText.text = "" + 30;
                 energy = 30;
+                break;
+            case 5:
+                energyText.text = "" + 45;
+                energy = 45;
                 break;
             case 6:
                 energyText.text = "" + 15;
                 energy = 15;
                 break;
             case 7:
-                energyText.text = "" + 20;
-                energy = 20;
+                energyText.text = "" + 25;
+                energy = 25;
                 break;
         }
     }
