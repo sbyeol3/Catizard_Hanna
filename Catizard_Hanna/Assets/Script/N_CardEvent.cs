@@ -115,4 +115,6 @@ public class N_CardEvent : MonoBehaviour
         CDS.RemoveMark(number);
     }
 
+
+
 }

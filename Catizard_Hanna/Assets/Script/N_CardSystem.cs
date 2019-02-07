@@ -13,6 +13,7 @@ public class N_CardSystem : MonoBehaviour
     public GameObject HeroSOS, HeroCurse, HeroDual;
     public RectTransform Hero;
     public RectTransform[] HeroABC;
+    public GridView gridView;
 
     private int SOS_repeat = 0;
 
@@ -25,7 +26,6 @@ public class N_CardSystem : MonoBehaviour
 
     IEnumerator HeroTimer()
     {
-        print("start");
         while (isGame)
         {
             if (HeroSlider.value <= 0)
@@ -78,6 +78,12 @@ public class N_CardSystem : MonoBehaviour
         HeroAnimator.SetBool("run", false);
         HeroSpeed = 1;
         HeroSOS.SetActive(false);
+    }
+
+    // JPS
+    public void JPS_Test()
+    {
+        gridView.JPS();
     }
 
 }
