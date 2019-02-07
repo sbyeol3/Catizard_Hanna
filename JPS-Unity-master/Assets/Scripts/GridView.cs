@@ -179,11 +179,11 @@ public class GridView : MonoBehaviour
 		JPSState.state = eJPSState.ST_PRIMARY_JPS_BUILDING; // transition state to Primary Jump Point Building State
 
 		// Tell each child object to re-evaulte their rendering info
-		foreach ( GameObject child in childObjects )
+		/*foreach ( GameObject child in childObjects )
 		{
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
-		}
+		}*/
 
         // 다음 단계로
         if (isPrint)
@@ -196,11 +196,11 @@ public class GridView : MonoBehaviour
 		JPSState.state = eJPSState.ST_STRAIGHT_JPS_BUILDING; // transition state to Primary Jump Point Building State
 
 		// Tell each child object to re-evaulte their rendering info
-		foreach ( GameObject child in childObjects )
+		/*foreach ( GameObject child in childObjects )
 		{
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
-		}
+		}*/
 
         // 다음 단계로
         if (isPrint)
@@ -213,11 +213,11 @@ public class GridView : MonoBehaviour
 		JPSState.state = eJPSState.ST_DIAGONAL_JPS_BUILDING; // transition state to Primary Jump Point Building State
 
 		// Tell each child object to re-evaulte their rendering info
-		foreach ( GameObject child in childObjects )
+		/*foreach ( GameObject child in childObjects )
 		{
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
-		}
+		}*/
 
         // 다음 단계로
         if (isPrint)
@@ -230,11 +230,11 @@ public class GridView : MonoBehaviour
 		JPSState.state = eJPSState.ST_WALL_DISTANCES_BUILT; // transition state to Primary Jump Point Building State
 
 		// Tell each child object to re-evaulte their rendering info
-		foreach ( GameObject child in childObjects )
+		/*foreach ( GameObject child in childObjects )
 		{
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
-		}
+		}*/
 
         // 다음 단계로
         if (isPrint)
@@ -292,10 +292,17 @@ public class GridView : MonoBehaviour
 
 		List<Point> path = grid.getPath( start, stop );
 
-		if ( path != null && path.Count != 0 )
-		{
-			_pathRenderer.drawPath( path );    // Draw Path on Screen
-		}
+        if (path != null && path.Count != 0)
+        {
+            _pathRenderer.drawPath(path);    // Draw Path on Screen
+            print("길을 찾았습니다.");
+            for (int i = 0; i < path.Count; i++)
+            {
+                print((i + 1) + "번째 노드 : (" + path[i].column + ", " + path[i].row + ")");
+            }
+        }
+        else
+            print("길을 찾을 수 없습니다.");
 	}
 
 	public void StepThroughPath()
