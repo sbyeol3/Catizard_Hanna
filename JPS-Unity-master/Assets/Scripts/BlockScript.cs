@@ -238,6 +238,7 @@ public class BlockScript : MonoBehaviour
 				nodeReference.isObstacle = ! nodeReference.isObstacle;    // flip obstacles
 				setupDisplay();
 				break;
+                /*
 			case eJPSState.ST_PLACE_SEARCH_ENDPOINTS:
 				if ( ! nodeReference.isObstacle && ! isPathEndPoint )    // if we are not an obstacle, then let them select this node
 				{
@@ -248,6 +249,7 @@ public class BlockScript : MonoBehaviour
 					setupDisplay();
 				}
 				break;
+                */
 		}
 
 	}

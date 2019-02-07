@@ -97,17 +97,17 @@ public class UIHandler : MonoBehaviour
 	public void OnWidthSliderChange()
 	{
 		// Update Text
-		_widthText.text = _widthSlider.value.ToString();
+		//_widthText.text = _widthSlider.value.ToString();
 		// Set new size of grid and resize it
-		_gridView.rowSize = (int) _widthSlider.value;
-		_gridView.numBlocks = _gridView.rowSize * (int) _heightSlider.value;
+		//_gridView.rowSize = (int) _widthSlider.value;
+		//_gridView.numBlocks = _gridView.rowSize * (int) _heightSlider.value;
 	}
 
 	public void OnHeightSliderChange()
 	{
 		// Update Text
-		_heightText.text = _heightSlider.value.ToString();
+		//_heightText.text = _heightSlider.value.ToString();
 		// Set new size of grid and resize it	
-		_gridView.numBlocks = _gridView.rowSize * (int) _heightSlider.value;
+		//_gridView.numBlocks = _gridView.rowSize * (int) _heightSlider.value;
 	}
 }

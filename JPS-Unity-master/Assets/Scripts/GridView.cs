@@ -7,10 +7,10 @@ public class GridView : MonoBehaviour
 {
 	public GameObject blockPrefab = null;
 
-	[RangeAttribute(0, 255)]
+	[RangeAttribute(0, 481)]
 	public int numBlocks = 1;
 	public float blockSize = 0.64f;
-	public int rowSize = 10;
+	public int rowSize = 37;
 	[RangeAttribute(0.0f, 1.0f)]
 	public float blockBuffer = 0.0f;
 
@@ -26,6 +26,10 @@ public class GridView : MonoBehaviour
 	private Queue< BlockScript > selectedPathPoints = new Queue< BlockScript >();
 
 	private IEnumerator findPath = null;
+
+    // 필요 변수 선언
+    private bool isPrint = false;
+    public int start_x = 0, start_y = 6, end_x = 36, end_y = 6;
 
 	void Start()
 	{
@@ -54,6 +58,7 @@ public class GridView : MonoBehaviour
 
 	public void Reset()
 	{
+        isPrint = false;
 		JPSState.state = eJPSState.ST_OBSTACLE_BUILDING;
 		_pathRenderer.disablePath();
 		findPath = null;
@@ -97,14 +102,41 @@ public class GridView : MonoBehaviour
 
 			grid.pathfindingNodes[ i ] = new PathfindingNode();
 			grid.pathfindingNodes[ i ].pos = new Point( row, column );
+            
+            // 회색지역 만들기
+            if ((column * row) % 2 == 1)
+            {
+                grid.gridNodes[i].isObstacle = true;
+            }
 
-			grid.rowSize = this.rowSize;
+            grid.rowSize = this.rowSize;
 			child.GetComponent<BlockScript>().nodeReference = grid.gridNodes[ i ]; // give the child a shared_ptr reference to the node it needs to act on
 			child.GetComponent<BlockScript>().gridView = this;
 
-			childObjects[ i ] = child;
-		}
+            // 목적지 만들기
+            if ((column == end_x) && (row == end_y))
+            {
+                child.GetComponent<BlockScript>().isPathEndPoint = true;
+                selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
+            }
+            // 출발지 만들기
+            else if ((column == start_x) && (row == start_y))
+            {
+                child.GetComponent<BlockScript>().isPathEndPoint = true;
+                selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
+            }
+
+            childObjects[ i ] = child;
+
+        }
 	}
+
+    // JPS 실행하기
+    public void JPS()
+    {
+        isPrint = true;
+        CalcPrimaryJumpPoints();
+    }
 
 	// Return the World Position of these grid points, relative to this object
 	public Vector3 getNodePosAsWorldPos( Point point )
@@ -118,6 +150,7 @@ public class GridView : MonoBehaviour
 		);
 	}
 
+    /*
 	public void markNodeAsPathPoint( BlockScript block_script )
 	{
 		if ( selectedPathPoints.Contains( block_script ) )
@@ -134,6 +167,7 @@ public class GridView : MonoBehaviour
 		// enqueue the new postition
 		selectedPathPoints.Enqueue( block_script );
 	}
+    */
 
 #endregion
 
@@ -150,7 +184,11 @@ public class GridView : MonoBehaviour
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
 		}
-	}
+
+        // 다음 단계로
+        if (isPrint)
+            CalcStraightJPDistances();
+    }
 
 	public void CalcStraightJPDistances()
 	{
@@ -163,7 +201,11 @@ public class GridView : MonoBehaviour
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
 		}
-	}
+
+        // 다음 단계로
+        if (isPrint)
+            CalcDiagonalJPDistances();
+    }
 
 	public void CalcDiagonalJPDistances()
 	{
@@ -176,7 +218,11 @@ public class GridView : MonoBehaviour
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
 		}
-	}
+
+        // 다음 단계로
+        if (isPrint)
+            CalcWallDistances();
+    }
 
 	public void CalcWallDistances()
 	{
@@ -189,14 +235,22 @@ public class GridView : MonoBehaviour
 			BlockScript block_component = child.GetComponent<BlockScript>();
 			block_component.setupDisplay();	
 		}
+
+        // 다음 단계로
+        if (isPrint)
+        {
+            BeginPathFind();
+        }
 	}
 
+    /*
 	// This button just enters the path search mode where the user can select the start and end points
 	public void PlaceSearchEndPoints()
 	{
 		JPSState.state = eJPSState.ST_PLACE_SEARCH_ENDPOINTS; // transition state to Primary Jump Point Building State
 
 		// Disable existing paths if we are restarting
+        // 출발지, 목적지 초기화 부분
 		foreach ( var block_script in selectedPathPoints )
 		{
 			block_script.isPathEndPoint = false;
@@ -215,7 +269,8 @@ public class GridView : MonoBehaviour
 			block_component.setupDisplay();	
 		}
 	}
-
+    */
+    
 	public void BeginPathFind()
 	{
 		// Verify at least TWO END POINTS ARE SET!
@@ -260,7 +315,14 @@ public class GridView : MonoBehaviour
 			// Get enumerator path finding
 			findPath = grid.getPathAsync( start, stop );
 
-			findPath.MoveNext();  // First iteration doesn't really do anything, so just skip it
+            // Tell each child object to re-evaulte their rendering info
+            foreach (GameObject child in childObjects)
+            {
+                BlockScript block_component = child.GetComponent<BlockScript>();
+                block_component.setupDisplay();
+            }
+
+            findPath.MoveNext();  // First iteration doesn't really do anything, so just skip it
 		}
 
 		// step through path finding process
