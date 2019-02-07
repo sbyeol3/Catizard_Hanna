@@ -5,7 +5,7 @@ using System.Collections.Generic;
 //[ExecuteInEditMode]
 public class GridView : MonoBehaviour 
 {
-	public GameObject blockPrefab = null;
+	public GameObject blockPrefab = null, seroPrefab = null, garoPrefab = null, roroPrefab = null;
 
 	[RangeAttribute(0, 481)]
 	public int numBlocks = 1;
@@ -87,15 +87,48 @@ public class GridView : MonoBehaviour
 		{
 			int column = i % rowSize;
 			int row    = i / rowSize;
-			
-			// Create a new Child object
-			GameObject child = Instantiate( blockPrefab );
+            bool isColumn = column % 2 == 1? true : false;
+            bool isRow = row % 2 == 1? true : false;
+            float xSize = 0, ySize = 0;
+
+            // Create a new Child object
+            // 크기 다르게 만들기
+            GameObject child;
+            if (isColumn && isRow)
+            {
+                child = Instantiate(roroPrefab);
+            }
+            else if (isColumn)
+            {
+                child = Instantiate(seroPrefab);
+            }
+            else if (isRow)
+            {
+                child = Instantiate(garoPrefab);
+            }
+            else
+            {
+                child = Instantiate(blockPrefab);
+            }
 			child.GetComponent<Transform>().parent = GetComponent<Transform>();  // Set as parent of this new child
-			child.GetComponent<Transform>().localPosition = new Vector3(
-				column *  ( blockSize + blockBuffer ),
-				row    * -( blockSize + blockBuffer ),
-				0.0f
-			);
+            if (isColumn)
+            {
+                xSize = (column + 1) * 0.5f * (blockSize * 1.2f + blockBuffer) + blockSize * 0.36f;
+            }
+            else
+            {
+                xSize = column * 0.5f * (blockSize * 1.2f + blockBuffer) + blockSize;
+            }
+            if (isRow)
+            {
+                ySize = (row + 1) * 0.5f * -(blockSize * 1.2f + blockBuffer) - blockSize * 0.36f;
+            }
+            else
+            {
+                ySize = row * 0.5f * -(blockSize * 1.2f + blockBuffer) - blockSize;
+            }
+            child.GetComponent<Transform>().localPosition = new Vector3(
+				xSize, ySize, 0.0f);
 
 			grid.gridNodes[ i ] = new Node();
 			grid.gridNodes[ i ].pos  = new Point( row, column );
