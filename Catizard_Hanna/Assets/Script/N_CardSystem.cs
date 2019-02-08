@@ -13,15 +13,20 @@ public class N_CardSystem : MonoBehaviour
     public GameObject HeroSOS, HeroCurse, HeroDual;
     public RectTransform Hero;
     public RectTransform[] HeroABC;
+    public Transform Cat;
     public GridView gridView;
 
     private int SOS_repeat = 0;
+    private float blockSize, blockBuffer;
 
     // Start is called before the first frame update
     void Awake()
     {
+        blockSize = gridView.blockSize;
+        blockBuffer = gridView.blockBuffer;
         HeroSlider.maxValue = GameMinute * 120;
         StartCoroutine("HeroTimer");
+        StartCoroutine("CatMove");
     }
 
     IEnumerator HeroTimer()
@@ -81,9 +86,50 @@ public class N_CardSystem : MonoBehaviour
     }
 
     // JPS
-    public void JPS_Test()
+    IEnumerator CatMove()
     {
-        gridView.JPS();
+        // 게임 시작 후 잠시동안은 움직이지 않음
+        Cat.position = new Vector3(blockSize - 7.4f, 6 * 0.5f * -(blockSize * 7f + blockBuffer) - blockSize + 2.3f);
+        yield return new WaitForSecondsRealtime(4f);
+
+        while (isGame)
+        {
+            // 다음 순서의 길이 있다면 다음 노드로 이동
+            if (gridView.isPath && gridView.CatIndex < gridView.CatPath.Count)
+            {
+                gridView.CatIndex++;
+                Point next = gridView.CatPath[gridView.CatIndex];
+                bool isColumn = next.column % 2 == 1 ? true : false;
+                bool isRow = next.row % 2 == 1 ? true : false;
+                float xSize = 0, ySize = 0;
+
+                // 위치 지정
+                if (isColumn)
+                {
+                    xSize = (next.column + 1) * 0.5f * (blockSize * 7f + blockBuffer) - blockSize * 3f;
+                }
+                else
+                {
+                    xSize = next.column * 0.5f * (blockSize * 7f + blockBuffer) + blockSize;
+                }
+                if (isRow)
+                {
+                    ySize = (next.row + 1) * 0.5f * -(blockSize * 7f + blockBuffer) + blockSize * 3f;
+                }
+                else
+                {
+                    ySize = next.row * 0.5f * -(blockSize * 7f + blockBuffer) - blockSize;
+                }
+
+                // 시작 위치 변경
+                gridView.temp_x = next.column;
+                gridView.temp_y = next.row;
+
+                Cat.position = new Vector3(xSize-7.4f, ySize+2.3f);
+            }
+
+            yield return new WaitForSecondsRealtime(2f);
+        }
     }
 
 }

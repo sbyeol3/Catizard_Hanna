@@ -52,7 +52,13 @@ MonoBehaviour:
   rowSize: 37
   blockBuffer: 0.1
   _pathRenderer: {fileID: 0}
+  isPrint: 0
+  isPath: 1
+  isChange: 0
   start_x: 0
   start_y: 6
+  temp_x: 0
+  temp_y: 6
   end_x: 36
   end_y: 6
+  CatIndex: 0

@@ -230,29 +230,13 @@ public class BlockScript : MonoBehaviour
 	void OnMouseDown()
 	{
 		if ( nodeReference == null ) return;                                // If a Node Reference wasn't given, then don't do anything
-		
-		switch ( JPSState.state )
-		{
-			// if we are in the building state, then yeah let them build
-			case eJPSState.ST_OBSTACLE_BUILDING:
-				nodeReference.isObstacle = ! nodeReference.isObstacle;    // flip obstacles
-				setupDisplay();
-				break;
-                /*
-			case eJPSState.ST_PLACE_SEARCH_ENDPOINTS:
-				if ( ! nodeReference.isObstacle && ! isPathEndPoint )    // if we are not an obstacle, then let them select this node
-				{
-					// Mark as one of the Goal
-					gridView.markNodeAsPathPoint( this );
-					// set visiual indicator FUCK HOW DO I TELL OLD NODES THAT THEY ARE NO LONGER SELECTED?!
-					isPathEndPoint = true;
-					setupDisplay();
-				}
-				break;
-                */
-		}
 
-	}
+        nodeReference.isObstacle = !nodeReference.isObstacle;    // flip obstacles
+        setupDisplay();
+        gridView.Reset();
+        gridView.JPS();
+
+    }
 
 	// Use this for initialization
 	void Start () 

@@ -23,15 +23,20 @@ public class GridView : MonoBehaviour
 
 	private Grid grid = new Grid();
 
-	private Queue< BlockScript > selectedPathPoints = new Queue< BlockScript >();
+	public Queue< BlockScript > selectedPathPoints = new Queue< BlockScript >();
 
 	private IEnumerator findPath = null;
 
-    // 필요 변수 선언
-    private bool isPrint = false;
-    public int start_x = 0, start_y = 6, end_x = 36, end_y = 6;
+    private BlockScript GoalPoint = null;
 
-	void Start()
+    // 필요 변수 선언
+    public bool isPrint = false, isPath = true, isChange = false;
+    public int start_x = 0, start_y = 6, temp_x = 0, temp_y =  6, end_x = 36, end_y = 6;
+    public List<Point> CatPath = null;
+    public int CatIndex = 0;
+
+
+    void Start()
 	{
 		Debug.Assert( _pathRenderer != null, "Path Renderer isn't set!" );
 
@@ -60,9 +65,11 @@ public class GridView : MonoBehaviour
         isPrint = false;
         JPSState.state = eJPSState.ST_OBSTACLE_BUILDING;
         _pathRenderer.disablePath();
+        CatIndex = 0;
+        CatPath = null;
         findPath = null;
-        selectedPathPoints.Clear();
-        resize();
+        // selectedPathPoints.Clear();
+        // resize();
     }
 
     // JPS 실행하기
@@ -157,6 +164,7 @@ public class GridView : MonoBehaviour
             if ((column == end_x) && (row == end_y))
             {
                 child.GetComponent<BlockScript>().isPathEndPoint = true;
+                GoalPoint = child.GetComponent<BlockScript>();
                 selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
             }
             // 출발지 만들기
@@ -169,7 +177,9 @@ public class GridView : MonoBehaviour
             childObjects[ i ] = child;
 
         }
-	}
+
+        JPS();
+    }
 
 	// Return the World Position of these grid points, relative to this object
 	public Vector3 getNodePosAsWorldPos( Point point )
@@ -314,6 +324,7 @@ public class GridView : MonoBehaviour
 	}
     */
     
+    // 길 찾기 부분
 	public void BeginPathFind()
 	{
 		// Verify at least TWO END POINTS ARE SET!
@@ -321,31 +332,51 @@ public class GridView : MonoBehaviour
 
 		JPSState.state = eJPSState.ST_FIND_PATH; // transition state to Primary Jump Point Building State
 
-		// Tell each child object to re-evaulte their rendering info
-		foreach ( GameObject child in childObjects )
+        // Tell each child object to re-evaulte their rendering info
+        selectedPathPoints.Clear();
+        foreach ( GameObject child in childObjects )
 		{
 			BlockScript block_component = child.GetComponent<BlockScript>();
+            Point block_point = block_component.nodeReference.pos;
+            if (block_point.column == start_x && block_point.row == start_y)
+            {
+                child.GetComponent<BlockScript>().isPathEndPoint = false;
+            }
+            if (block_point.column == temp_x && block_point.row == temp_y)
+            {
+                child.GetComponent<BlockScript>().isPathEndPoint = true;
+                selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
+            }
 			block_component.setupDisplay();	
 		}
+        selectedPathPoints.Enqueue(GoalPoint);
+        start_x = temp_x;
+        start_y = temp_y;
 
 		BlockScript[] points = this.selectedPathPoints.ToArray();
 
-		Point start = points[ 0 ].nodeReference.pos;
-		Point stop  = points[ 1 ].nodeReference.pos;
+        Point start, stop;
 
-		List<Point> path = grid.getPath( start, stop );
+        start = points[0].nodeReference.pos;
+        stop = points[1].nodeReference.pos;
 
-        if (path != null && path.Count != 0)
+        CatPath = grid.getPath( start, stop );
+
+        if (CatPath != null && CatPath.Count != 0)
         {
-            _pathRenderer.drawPath(path);    // Draw Path on Screen
+            _pathRenderer.drawPath(CatPath);    // Draw Path on Screen
+            isPath = true;
             print("길을 찾았습니다.");
-            for (int i = 0; i < path.Count; i++)
+            for (int i = 0; i < CatPath.Count; i++)
             {
-                print((i + 1) + "번째 노드 : (" + path[i].column + ", " + path[i].row + ")");
+                print((i + 1) + "번째 노드 : (" + CatPath[i].column + ", " + CatPath[i].row + ")");
             }
         }
         else
+        {
+            isPath = false;
             print("길을 찾을 수 없습니다.");
+        }
 	}
 
 	public void StepThroughPath()
