@@ -41,6 +41,7 @@ public class GridView : MonoBehaviour
 		Debug.Assert( _pathRenderer != null, "Path Renderer isn't set!" );
 
 		_pathRenderer._gridView = this;
+        resize();
 	}
 
 	// Update is called once per frame
@@ -49,14 +50,9 @@ public class GridView : MonoBehaviour
 		// If no one has given us a prefab to use, then don't make anything as we'll just get null pointer exception nonsense
 		if ( blockPrefab == null )
 			return;
-
-		// If we need to resize then do
-		if ( previousNumBlocks != numBlocks || previousBuffer != blockBuffer )
-		{
-			resize();
-			previousNumBlocks = numBlocks;
-			previousBuffer = blockBuffer;
-		}
+        
+			JPS();
+		
 	}
 
     // JPS 리셋
@@ -177,12 +173,37 @@ public class GridView : MonoBehaviour
             childObjects[ i ] = child;
 
         }
+        //랜덤지역 만들기
+        Random_pos();
 
         JPS();
     }
+    public void Random_pos()
+    {
+        int[] rand_x = new int[9];
+        int[] rand_y = new int[9];
+        int x_district = 1; //첫번째 열(column==0)빼려고 1부터 초기화
+        int y_district = 0;
+        for (int j = 0; j < 3; j++)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                rand_x[i + 3 * j] = Random.Range(x_district, x_district + 4); //고양이가 움직이는 보드의 정수형 x좌표 = n 임. +4는 다음구역으로 넘어가는거고 마지막 열 빼기위해 4까지만 이동함ㅠ
+                rand_y[i + 3 * j] = Random.Range(y_district, y_district + 2); //고양이가 움직이는 보드의 정수형 y좌표 = m ->문제는 마지막행은 절대 못가는 칸이 안만들어짐ㅠ
+                x_district += 6;
+            }
+            x_district = 1;
+            if (j == 1) { y_district += 3; }
+            else { y_district += 2; }
+        }
+        for (int k = 0; k < rand_x.Length; k++)
+        {
+            grid.gridNodes[2 * rand_y[k] * 37 + 2 * rand_x[k]].isObstacle = true; // 코드 보드판에서 좌표는 (2n ,2m)임. 그걸 인덱스화해서 장애물로 만듦!
+        }
+    }
 
-	// Return the World Position of these grid points, relative to this object
-	public Vector3 getNodePosAsWorldPos( Point point )
+    // Return the World Position of these grid points, relative to this object
+    public Vector3 getNodePosAsWorldPos( Point point )
 	{
 		var trans = GetComponent<Transform>();
         float x, y;
