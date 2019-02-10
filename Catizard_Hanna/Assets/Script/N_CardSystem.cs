@@ -6,15 +6,18 @@ using UnityEngine.UI;
 public class N_CardSystem : MonoBehaviour
 {
 
-    public bool isGame = true;
-    public int GameMinute = 5, HeroSpeed = 1;
+    public bool isGame = true, isCurse = false, isSOS = false;
+    public int GameMinute = 5, HeroSpeed = 1, cat_wait = 4;
     public Slider HeroSlider;
     public Animator HeroAnimator;
     public GameObject HeroSOS, HeroCurse, HeroDual;
     public RectTransform Hero;
     public RectTransform[] HeroABC;
-    public Transform Cat;
+    public Transform Cat, SP_bar;
     public GridView gridView;
+    public Slider SP_Slider;
+    public GameObject[] Cat_graphic;
+   
 
     private int SOS_repeat = 0;
     private float blockSize, blockBuffer;
@@ -27,6 +30,8 @@ public class N_CardSystem : MonoBehaviour
         HeroSlider.maxValue = GameMinute * 120;
         StartCoroutine("HeroTimer");
         StartCoroutine("CatMove");
+        Cat_graphic[1].SetActive(false);
+        Cat_graphic[0].SetActive(true);
     }
 
     IEnumerator HeroTimer()
@@ -37,7 +42,15 @@ public class N_CardSystem : MonoBehaviour
             {
                 isGame = false;
             }
-            HeroSlider.value -= HeroSpeed;
+            if (HeroSlider.value < HeroSlider.maxValue && isCurse)
+            {
+                HeroSlider.value += HeroSpeed;
+            }
+            else
+            {
+                HeroSlider.value -= HeroSpeed;
+            }
+
             for(int i = 0; i < 3; i++)
             {
                 HeroABC[i].anchorMin = new Vector2(Hero.anchorMin.x, 0);
@@ -61,6 +74,7 @@ public class N_CardSystem : MonoBehaviour
     // 비둘기 전갈 카드 (시간 누적 O)
     public void On_SOS()
     {
+        isSOS = true;
         SOS_repeat++;
 
         if (SOS_repeat == 1)
@@ -70,16 +84,19 @@ public class N_CardSystem : MonoBehaviour
             HeroSOS.SetActive(true);
             StartCoroutine("Off_SOS");
         }
+        
     }
 
     IEnumerator Off_SOS()
     {
+
         while (SOS_repeat > 0)
         {
             yield return new WaitForSecondsRealtime(10f);
             SOS_repeat--;
         }
-        
+        isSOS = false;
+        HeroDual.SetActive(false);
         HeroAnimator.SetBool("run", false);
         HeroSpeed = 1;
         HeroSOS.SetActive(false);
@@ -127,10 +144,73 @@ public class N_CardSystem : MonoBehaviour
                 gridView.temp_y = next.row;
 
                 Cat.position = new Vector3(xSize-7.4f, ySize+2.3f);
+                SP_bar.position = new Vector3(xSize - 7.4f, ySize + 1.8f);
             }
 
-            yield return new WaitForSecondsRealtime(2f);
+            for (int i = 0; i < cat_wait; i++)
+            {
+                if (SP_Slider.value < 100)
+                {
+                    SP_Slider.value++;
+                }
+            yield return new WaitForSecondsRealtime(1f);
+
+            }
         }
     }
 
+    public void Cat_rest()
+    {
+        Cat_graphic[0].SetActive(false);
+        Cat_graphic[1].SetActive(true);
+        cat_wait = 12;
+        Invoke("Cat_SPplus", 12f);
+
+    }
+
+    void Cat_SPplus()
+    {
+        if (SP_Slider.value <= 70)
+        {
+
+            SP_Slider.value += 30;
+        }
+        else
+            SP_Slider.value = 100;
+        cat_wait = 4;
+        Cat_graphic[0].SetActive(true);
+        Cat_graphic[1].SetActive(false);
+    }
+
+    public void Cat_curse()
+    {
+        if (SP_Slider.value < 30)
+            return;
+
+        isCurse = true;
+        //HeroSlider.handleRect.localScale.Set(-1, 1, 1);
+        HeroCurse.SetActive(true);
+        SP_Slider.value -= 30;
+        if (isSOS)
+        {
+            HeroDual.SetActive(true);
+        }
+        Invoke("After_curse", 15f);
+
+    }
+
+    void After_curse()
+    {
+        isCurse = false;
+        HeroCurse.SetActive(false);
+        HeroDual.SetActive(false);
+
+        //HeroSlider.handleRect.localScale.Set(1, 1, 1);
+    }
+
+    
+
+
+
+    
 }
