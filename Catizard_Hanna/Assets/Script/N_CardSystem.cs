@@ -34,6 +34,12 @@ public class N_CardSystem : MonoBehaviour
         Cat_graphic[0].SetActive(true);
     }
 
+    private void Update()
+    {
+        Vector3 temp = Cat.position;
+        SP_bar.position = new Vector3(temp.x + 0.05f, temp.y - 0.4f);
+    }
+
     IEnumerator HeroTimer()
     {
         while (isGame)
@@ -144,7 +150,6 @@ public class N_CardSystem : MonoBehaviour
                 gridView.temp_y = next.row;
 
                 Cat.position = new Vector3(xSize-7.4f, ySize+2.3f);
-                SP_bar.position = new Vector3(xSize - 7.4f, ySize + 1.8f);
             }
 
             for (int i = 0; i < cat_wait; i++)
@@ -188,11 +193,12 @@ public class N_CardSystem : MonoBehaviour
             return;
 
         isCurse = true;
-        //HeroSlider.handleRect.localScale.Set(-1, 1, 1);
+        Hero.localScale = new Vector3(-1, 1, 1);
         HeroCurse.SetActive(true);
         SP_Slider.value -= 30;
         if (isSOS)
         {
+            HeroSOS.SetActive(false);
             HeroDual.SetActive(true);
         }
         Invoke("After_curse", 15f);
@@ -204,8 +210,9 @@ public class N_CardSystem : MonoBehaviour
         isCurse = false;
         HeroCurse.SetActive(false);
         HeroDual.SetActive(false);
-
-        //HeroSlider.handleRect.localScale.Set(1, 1, 1);
+        if (isSOS)
+            HeroSOS.SetActive(true);
+        Hero.localScale = new Vector3(1, 1, 1);
     }
 
     
