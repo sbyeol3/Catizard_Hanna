@@ -27,25 +27,31 @@ public class GridView : MonoBehaviour
 
 	private IEnumerator findPath = null;
 
-    private BlockScript GoalPoint = null;
+    private BlockScript[] GoalPoint = new BlockScript[7];
 
     // 필요 변수 선언
     public bool isPrint = false, isPath = true, isChange = false;
-    public int start_x = 0, start_y = 6, temp_x = 0, temp_y =  6, end_x = 36, end_y = 6;
-    public List<Point> CatPath = null;
-    public int CatIndex = 0;
+    public int start_x = 0, start_y=0, temp_x = 0, temp_y = 6, end_x = 36, end_y;
+    public int[] last_column = new int[7] { 0, 1, 2, 3, 4, 5, 6 };
+    public List<Point>[] CatPath = new List<Point>[7];
+    public int minIndex = -1, CatIndex = 0;
 
 
     void Start()
 	{
 		Debug.Assert( _pathRenderer != null, "Path Renderer isn't set!" );
 
+        for (int i = 0; i < 7; i++)
+        {
+            CatPath[i] = new List<Point>();
+        }
+
 		_pathRenderer._gridView = this;
         resize();
 	}
 
 	// Update is called once per frame
-	void Update () 
+	/*void Update () 
 	{
 		// If no one has given us a prefab to use, then don't make anything as we'll just get null pointer exception nonsense
 		if ( blockPrefab == null )
@@ -53,7 +59,7 @@ public class GridView : MonoBehaviour
         
 			JPS();
 		
-	}
+	}*/
 
     // JPS 리셋
     public void Reset()
@@ -62,7 +68,11 @@ public class GridView : MonoBehaviour
         JPSState.state = eJPSState.ST_OBSTACLE_BUILDING;
         _pathRenderer.disablePath();
         CatIndex = 0;
-        CatPath = null;
+        minIndex = -1;
+        for (int i = 0; i < 7; i++)
+        {
+            CatPath[i] = null;
+        }
         findPath = null;
         // selectedPathPoints.Clear();
         // resize();
@@ -157,10 +167,11 @@ public class GridView : MonoBehaviour
 			child.GetComponent<BlockScript>().gridView = this;
 
             // 목적지 만들기
-            if ((column == end_x) && (row == end_y))
+            if ((column == end_x) && (row % 2 == 0))
             {
                 child.GetComponent<BlockScript>().isPathEndPoint = true;
-                GoalPoint = child.GetComponent<BlockScript>();
+
+                GoalPoint[row/2] = child.GetComponent<BlockScript>();
                 selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
             }
             // 출발지 만들기
@@ -313,7 +324,12 @@ public class GridView : MonoBehaviour
         // 다음 단계로
         if (isPrint)
         {
-            BeginPathFind();
+            //for (int i = 0; i<7; i++)
+            //{
+            //    end_y = end_column[i];
+                
+                BeginPathFind();
+            //}
         }
 	}
 
@@ -344,20 +360,24 @@ public class GridView : MonoBehaviour
 		}
 	}
     */
-    
-    // 길 찾기 부분
-	public void BeginPathFind()
-	{
-		// Verify at least TWO END POINTS ARE SET!
-		if ( this.selectedPathPoints.Count != 2 ) return;
 
-		JPSState.state = eJPSState.ST_FIND_PATH; // transition state to Primary Jump Point Building State
+    // 길 찾기 부분
+    public void BeginPathFind()
+    {
+        // Verify at least TWO END POINTS ARE SET!
+        //if (this.selectedPathPoints.Count != 2) return;
+
+        JPSState.state = eJPSState.ST_FIND_PATH; // transition state to Primary Jump Point Building State
+
+        BlockScript start_point= null;
+
+        int min = int.MaxValue;
 
         // Tell each child object to re-evaulte their rendering info
-        selectedPathPoints.Clear();
-        foreach ( GameObject child in childObjects )
-		{
-			BlockScript block_component = child.GetComponent<BlockScript>();
+ 
+        foreach (GameObject child in childObjects)
+        {
+            BlockScript block_component = child.GetComponent<BlockScript>();
             Point block_point = block_component.nodeReference.pos;
             if (block_point.column == start_x && block_point.row == start_y)
             {
@@ -366,39 +386,62 @@ public class GridView : MonoBehaviour
             if (block_point.column == temp_x && block_point.row == temp_y)
             {
                 child.GetComponent<BlockScript>().isPathEndPoint = true;
-                selectedPathPoints.Enqueue(child.GetComponent<BlockScript>());
+                start_point = child.GetComponent<BlockScript>();
             }
-			block_component.setupDisplay();	
-		}
-        selectedPathPoints.Enqueue(GoalPoint);
-        start_x = temp_x;
-        start_y = temp_y;
-
-		BlockScript[] points = this.selectedPathPoints.ToArray();
-
-        Point start, stop;
-
-        start = points[0].nodeReference.pos;
-        stop = points[1].nodeReference.pos;
-
-        CatPath = grid.getPath( start, stop );
-
-        if (CatPath != null && CatPath.Count != 0)
+            block_component.setupDisplay();
+        }
+        for (int i = 0; i < 7; i++)
         {
-            _pathRenderer.drawPath(CatPath);    // Draw Path on Screen
-            isPath = true;
-            print("길을 찾았습니다.");
-            for (int i = 0; i < CatPath.Count; i++)
+            selectedPathPoints.Clear();
+            selectedPathPoints.Enqueue(start_point);
+            selectedPathPoints.Enqueue(GoalPoint[i]);
+            GoalPoint[i].isPathEndPoint = true;
+            
+
+            start_x = temp_x;
+            start_y = temp_y;
+
+            BlockScript[] points = this.selectedPathPoints.ToArray();
+
+            Point start, stop;
+
+            start = points[0].nodeReference.pos;
+            stop = points[1].nodeReference.pos;
+
+            CatPath[i] = grid.getPath(start, stop);
+
+            int tempCount = CatPath[i].Count;
+
+            if (CatPath[i] != null && tempCount != 0)
             {
-                print((i + 1) + "번째 노드 : (" + CatPath[i].column + ", " + CatPath[i].row + ")");
+                isPath = true;
+                print(i + "번째 : 길을 찾았습니다.");
+                if (min > tempCount)
+                {
+                    min = tempCount;
+                    minIndex = i;
+                }
+             //   for (int i = 0; i < CatPath.Count; i++)
+              //  {
+              //      print((i + 1) + "번째 노드 : (" + CatPath[i].column + ", " + CatPath[i].row + ")");
+              //  }
             }
+            else
+            {
+                isPath = false;
+                print(i+"번째 : 길을 찾을 수 없습니다.");
+            }
+            GoalPoint[i].isPathEndPoint = false;
+        }
+        if (minIndex < 0)
+        {
+            print("길이 존재하지 않습니다.");
         }
         else
         {
-            isPath = false;
-            print("길을 찾을 수 없습니다.");
+            _pathRenderer.drawPath(CatPath[minIndex]);    // Draw Path on Screen
         }
-	}
+    }
 
 	public void StepThroughPath()
 	{

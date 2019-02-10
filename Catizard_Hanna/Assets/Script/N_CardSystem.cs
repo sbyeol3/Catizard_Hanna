@@ -94,11 +94,12 @@ public class N_CardSystem : MonoBehaviour
 
         while (isGame)
         {
+            
             // 다음 순서의 길이 있다면 다음 노드로 이동
-            if (gridView.isPath && gridView.CatIndex < gridView.CatPath.Count)
+            if (gridView.minIndex>=0&&gridView.isPath && gridView.CatIndex < gridView.CatPath[gridView.minIndex].Count)
             {
                 gridView.CatIndex++;
-                Point next = gridView.CatPath[gridView.CatIndex];
+                Point next = gridView.CatPath[gridView.minIndex][gridView.CatIndex];
                 bool isColumn = next.column % 2 == 1 ? true : false;
                 bool isRow = next.row % 2 == 1 ? true : false;
                 float xSize = 0, ySize = 0;
