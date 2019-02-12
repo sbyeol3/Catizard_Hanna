@@ -106,6 +106,7 @@ public class GridView : MonoBehaviour
 		{
 			int column = i % rowSize;
 			int row    = i / rowSize;
+            int blockType = 0;
             bool isColumn = column % 2 == 1? true : false;
             bool isRow = row % 2 == 1? true : false;
             float xSize = 0, ySize = 0;
@@ -116,18 +117,22 @@ public class GridView : MonoBehaviour
             if (isColumn && isRow)
             {
                 child = Instantiate(roroPrefab);
+                blockType = 0;
             }
             else if (isColumn)
             {
                 child = Instantiate(seroPrefab);
+                blockType = 1;
             }
             else if (isRow)
             {
                 child = Instantiate(garoPrefab);
+                blockType = 2;
             }
             else
             {
                 child = Instantiate(blockPrefab);
+                blockType = 3;
             }
 			child.GetComponent<Transform>().parent = GetComponent<Transform>();  // Set as parent of this new child
             // 블럭 위치 지정
@@ -165,6 +170,7 @@ public class GridView : MonoBehaviour
             grid.rowSize = this.rowSize;
 			child.GetComponent<BlockScript>().nodeReference = grid.gridNodes[ i ]; // give the child a shared_ptr reference to the node it needs to act on
 			child.GetComponent<BlockScript>().gridView = this;
+            child.GetComponent<BlockScript>().BlockType = blockType;
 
             // 목적지 만들기
             if ((column == end_x) && (row % 2 == 0))

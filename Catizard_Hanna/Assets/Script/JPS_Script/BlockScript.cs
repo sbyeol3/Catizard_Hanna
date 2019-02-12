@@ -34,6 +34,8 @@ public class BlockScript : MonoBehaviour
 	// Weak Reference to node
 	public Node nodeReference = null;
 	public GridView gridView;
+    public int BlockType;
+    public dotActive d;
 
 	public bool isPathEndPoint = false;
 
@@ -238,8 +240,19 @@ public class BlockScript : MonoBehaviour
 
     }
 
-	// Use this for initialization
-	void Start () 
+    void OnMouseOver()
+    {
+        if (cardMake.clickMake && BlockType == 0)
+            d.wallPreview(nodeReference.pos.column, nodeReference.pos.row);    
+    }
+
+    void OnMouseExit()
+    {
+        d.exitPreview();
+    }
+
+    // Use this for initialization
+    void Start () 
 	{
 		setupDisplay();
 	}

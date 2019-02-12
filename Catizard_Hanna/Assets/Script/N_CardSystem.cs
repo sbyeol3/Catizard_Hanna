@@ -149,7 +149,7 @@ public class N_CardSystem : MonoBehaviour
                 gridView.temp_x = next.column;
                 gridView.temp_y = next.row;
 
-                Cat.position = new Vector3(xSize-7.4f, ySize+2.3f);
+                Cat.position = new Vector3(xSize-7.4f, ySize+2.3f); // 수동으로 변경할 부분 좌표계
             }
 
             for (int i = 0; i < cat_wait; i++)

@@ -333,6 +333,8 @@ MonoBehaviour:
   jumpPointDistanceColor: {r: 0, g: 0, b: 1, a: 1}
   wallDistanceColor: {r: 1, g: 0, b: 0, a: 1}
   gridView: {fileID: 0}
+  BlockType: 2
+  d: {fileID: 0}
   isPathEndPoint: 0
 --- !u!1 &2437773055065937268
 GameObject:
